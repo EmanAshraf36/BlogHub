@@ -1,0 +1,48 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block title %}{{ page_title }} - BlogHub{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="bg-warning text-dark py-4">
+    <div class="container">
+        <h1>� {{ page_title }}</h1>
+        <p class="lead">Discover our latest articles and stories</p>
+    </div>
+</div>
+
+<!-- Posts Grid -->
+<div class="container my-5">
+    <div class="row">
+        {% for post in posts %}
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ post.title }}</h5>
+                    <p class="text-muted">By {{ post.author }} | {{ post.category }}</p>
+                    <p class="card-text">{{ post.excerpt }}</p>
+                    <small class="text-muted">{{ post.date }} • {{ post.reading_time }} read</small>
+                    
+                    {% if post.published %}
+                        <span class="badge bg-success">✓ Published</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Draft</span>
+                    {% endif %}
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'blog:post_detail' post.id %}" class="btn btn-primary btn-sm w-100">
+                        Read More
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Posts Count -->
+    <div class="text-center mt-4">
+        <p class="lead">Showing {{ total_posts }} posts</p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}
+    {% if post %}Edit Post{% else %}Create Post{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <h1 class="mb-4">
+        {% if post %}Edit Post{% else %}Create New Post{% endif %}
+    </h1>
+
+    <form method="post">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+
+        <!-- Title -->
+        <div class="mb-3">
+            <label for="{{ form.title.id_for_label }}" class="form-label">Title *</label>
+            {{ form.title }}
+            {% if form.title.errors %}
+                <div class="text-danger small">
+                    {{ form.title.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Excerpt -->
+        <div class="mb-3">
+            <label for="{{ form.excerpt.id_for_label }}" class="form-label">Excerpt</label>
+            {{ form.excerpt }}
+            {% if form.excerpt.errors %}
+                <div class="text-danger small">
+                    {{ form.excerpt.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Content -->
+        <div class="mb-3">
+            <label for="{{ form.content.id_for_label }}" class="form-label">Content *</label>
+            {{ form.content }}
+            {% if form.content.errors %}
+                <div class="text-danger small">
+                    {{ form.content.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Category -->
+        <div class="mb-3">
+            <label for="{{ form.category.id_for_label }}" class="form-label">Category</label>
+            {{ form.category }}
+            {% if form.category.errors %}
+                <div class="text-danger small">
+                    {{ form.category.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Tags -->
+        <div class="mb-3">
+            <label for="{{ form.tags.id_for_label }}" class="form-label">Tags</label>
+            {{ form.tags }}
+            {% if form.tags.errors %}
+                <div class="text-danger small">
+                    {{ form.tags.errors.0 }}
+                </div>
+            {% endif %}
+            <small class="form-text text-muted">Hold Ctrl/Cmd to select multiple tags.</small>
+        </div>
+
+        <!-- Status -->
+        <div class="mb-3">
+            <label for="{{ form.status.id_for_label }}" class="form-label">Status</label>
+            {{ form.status }}
+            {% if form.status.errors %}
+                <div class="text-danger small">
+                    {{ form.status.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Boolean fields -->
+        <div class="form-check mb-2">
+            {{ form.is_featured }}
+            <label class="form-check-label" for="{{ form.is_featured.id_for_label }}">
+                Featured post
+            </label>
+        </div>
+        <div class="form-check mb-3">
+            {{ form.allow_comments }}
+            <label class="form-check-label" for="{{ form.allow_comments.id_for_label }}">
+                Allow comments
+            </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            {% if post %}Update Post{% else %}Create Post{% endif %}
+        </button>
+        <a href="{% url 'blog:post-list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

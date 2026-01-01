@@ -1,0 +1,191 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Page title (child templates can override) -->
+    <title>{% block title %}BlogHub - Share Your Stories{% endblock %}</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+
+    <!-- Extra CSS (child templates can add more CSS) -->
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <!-- Brand -->
+            <a class="navbar-brand" href="{% url 'blog:home' %}">👋 BlogHub</a>
+
+            <!-- Toggler -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#mainNavbar" aria-controls="mainNavbar"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Collapsible content -->
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <!-- LEFT SIDE: main navigation -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <!-- Home -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'blog:home' %}">Home</a>
+                    </li>
+
+                    <!-- Categories dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="categoriesDropdown"
+                           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Categories
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="categoriesDropdown">
+                            {% if categories %}
+                                {% for category in categories %}
+                                    {% if category and category.name %}
+                                        <li>
+                                            <a class="dropdown-item"
+                                               href="{% url 'blog:category_posts' category.name %}">
+                                                {{ category.name }}
+                                            </a>
+                                        </li>
+                                    {% else %}
+                                        <li>
+                                            <span class="dropdown-item-text text-muted">
+                                                Unnamed category
+                                            </span>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <li>
+                                    <span class="dropdown-item-text text-muted">
+                                        No categories yet
+                                    </span>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </li>
+
+                    <!-- About -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'blog:about' %}">About</a>
+                    </li>
+
+                    <!-- Contact -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'blog:contact' %}">Contact</a>
+                    </li>
+                </ul>
+
+                <!-- Optional search in the middle/right -->
+                <form method="GET" action="{% url 'blog:search_results' %}"
+                      class="d-flex mx-lg-3 my-2 my-lg-0">
+                    <input type="text" name="q" class="form-control me-2"
+                           placeholder="Search posts..." required>
+                    <button type="submit" class="btn btn-outline-light">🔍</button>
+                </form>
+
+                <!-- RIGHT SIDE: auth + create post -->
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    {% if user.is_authenticated %}
+                        <!-- Create Post -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'blog:post-create' %}">
+                                + Create Post
+                            </a>
+                        </li>
+
+                        <!-- Username + logout dropdown (optional) -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown"
+                               role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ user.username }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end"
+                                aria-labelledby="userDropdown">
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'logout' %}">
+                                        Logout
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <!-- Login -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Login</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- FLASH MESSAGES -->
+    <div class="container mt-3">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show"
+                     role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                            aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-grow-1 py-4">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- FOOTER (same theme as before) -->
+    <footer class="bg-dark text-white mt-5 py-4">
+        <div class="container">
+            <div class="row">
+                <!-- Column 1 -->
+                <div class="col-md-4 mb-3">
+                    <h5>BlogHub</h5>
+                    <p>Share your stories with the world.</p>
+                </div>
+
+                <!-- Column 2 -->
+                <div class="col-md-4 mb-3">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'blog:home' %}" class="text-white">Home</a></li>
+                        <li><a href="{% url 'blog:post-list' %}" class="text-white">Posts</a></li>
+                        <li><a href="{% url 'blog:about' %}" class="text-white">About</a></li>
+                        <li><a href="{% url 'blog:contact' %}" class="text-white">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 3 -->
+                <div class="col-md-4 mb-3">
+                    <h5>Follow Us</h5>
+                    <p>Facebook | Twitter | Instagram</p>
+                </div>
+            </div>
+
+            <hr class="bg-white">
+            <div class="text-center">
+                <p class="mb-0">&copy; 2025 BlogHub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            defer></script>
+
+    <!-- Extra JS (child templates can add more JS) -->
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

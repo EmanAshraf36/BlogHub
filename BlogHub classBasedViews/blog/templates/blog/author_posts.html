@@ -1,0 +1,47 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block title %}Posts by {{ author_name }} - BlogHub{% endblock %}
+
+{% block content %}
+<div class="bg-dark text-white py-4">
+  <div class="container">
+    <h1>🖊️ Posts by {{ author_name }}</h1>
+    <p class="lead">Showing {{ total_posts }} post{{ total_posts|pluralize }}</p>
+  </div>
+</div>
+
+<div class="container my-5">
+  {% if posts %}
+    <div class="row">
+      {% for post in posts %}
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">{{ post.title }}</h5>
+            <p class="text-muted">
+              <a href="{% url 'blog:author_posts' post.author|slugify %}">{{ post.author }}</a>
+              | {{ post.category }}
+            </p>
+            <p class="card-text">{{ post.excerpt }}</p>
+            {% if post.published %}
+              <span class="badge bg-success">✓ Published</span>
+            {% else %}
+              <span class="badge bg-secondary">Draft</span>
+            {% endif %}
+          </div>
+          <div class="card-footer">
+            <a href="{% url 'blog:post_detail' post.id %}" class="btn btn-primary btn-sm w-100">Read More</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-warning text-center">
+      <h4>No posts found for {{ author_name }}</h4>
+      <a href="{% url 'blog:posts' %}" class="btn btn-primary mt-2">View All Posts</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

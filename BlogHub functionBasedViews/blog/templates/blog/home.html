@@ -1,0 +1,125 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block title %}Home - BlogHub{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="container-fluid bg-primary text-white py-5">
+    <div class="container">
+        <h1 class="display-4">👋 Welcome to {{ site_name|default:"BlogHub" }}!</h1>
+        <p class="lead">
+            {{ tagline|default:"Your platform for sharing ideas." }}
+        </p>
+        <a href="{% url 'blog:post-list' %}" class="btn btn-light btn-lg">Explore Posts</a>
+    </div>
+</div>
+
+<!-- Featured Post Alert (Conditional) -->
+{% if is_featured_active and featured_posts %}
+<div class="container mt-4">
+    <div class="alert alert-success border-start border-5 border-success">
+        <h2 class="alert-heading">⭐ FEATURED POST!</h2>
+        <p class="mb-0">Check out our latest featured article! Don't miss it!</p>
+    </div>
+</div>
+{% endif %}
+
+<!-- Blog Statistics -->
+<div class="container my-4">
+    <div class="card bg-light">
+        <div class="card-body">
+            <h2 class="card-title">Our Blog Statistics</h2>
+            <div class="row text-center mt-3">
+                <div class="col-md-4">
+                    <h3 class="text-primary">{{ total_posts }}</h3>
+                    <p class="text-muted">Published Posts</p>
+                </div>
+                <div class="col-md-4">
+                    <h3 class="text-primary">{{ categories_count }}</h3>
+                    <p class="text-muted">Categories</p>
+                </div>
+                <div class="col-md-4">
+                    <h3 class="text-primary">2025</h3>
+                    <p class="text-muted">Blogging Since</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Why Read Our Blog Section -->
+<div class="container my-5">
+    <h2 class="text-center mb-4">Why Read Our Blog?</h2>
+    <div class="row">
+        {% for feature in features %}
+        <div class="col-md-6 col-lg-3 mb-3">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h3>{{ feature.icon }}</h3>
+                    <h5 class="card-title">{{ feature.title }}</h5>
+                    <p class="card-text">{{ feature.description }}</p>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center text-muted">No reasons added yet.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Featured Posts Section -->
+<div class="container my-5">
+    <h2 class="text-center mb-4">🔥 Featured Posts</h2>
+    <div class="row">
+        {% for post in featured_posts %}
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ post.title }}</h5>
+                    <p class="text-muted">
+                        {% if post.category %}
+                            {{ post.category.name }} |
+                        {% endif %}
+                        By {{ post.author.username }}
+                    </p>
+                    <p class="card-text">
+                        {{ post.excerpt|default:post.content|truncatewords:25 }}
+                    </p>
+                </div>
+                <div class="card-footer text-center">
+                    <a href="{% url 'blog:post-detail' post.slug %}" class="btn btn-primary btn-sm w-100">
+                        Read More →
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center text-muted">No featured posts yet.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Popular Categories (using your featured_topics data) -->
+<div class="container my-5">
+    <h2 class="text-center mb-4">Popular Categories</h2>
+    <div class="row">
+        {% for topic in featured_topics %}
+        <div class="col-md-6 col-lg-4 mb-3">
+            <div class="list-group">
+                <span class="list-group-item list-group-item-action">
+                    {{ topic }}
+                </span>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center text-muted">Popular categories will appear here once you configure them.</p>
+        {% endfor %}
+    </div>
+    <div class="text-center mt-4">
+        <a href="{% url 'blog:about' %}" class="btn btn-primary">
+            Learn more about {{ site_name|default:"BlogHub" }}
+        </a>
+    </div>
+</div>
+{% endblock %}

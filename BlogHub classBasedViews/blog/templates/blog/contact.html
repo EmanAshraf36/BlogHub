@@ -1,0 +1,89 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block title %}Contact Us - BlogHub{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="bg-success text-white py-4">
+    <div class="container">
+        <h1>📞 Contact Us</h1>
+        <p class="lead">We're here to help! Reach out anytime.</p>
+    </div>
+</div>
+
+<!-- Contact Information -->
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">📧 Email</h5>
+                    <p class="card-text">{{ email }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">📱 Phone</h5>
+                    <p class="card-text">{{ phone }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">📍 Address</h5>
+                    <p class="card-text">{{ address }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">🕐 Business Hours</h5>
+                    <p class="card-text">{{ business_hours }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Departments -->
+    <div class="mt-5">
+        <h2 class="mb-4">📋 Departments</h2>
+        <div class="row">
+            {% for dept in departments %}
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ dept.name }}</h5>
+                        <p class="card-text">{{ dept.email }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Social Media -->
+    <div class="mt-5">
+        <h2 class="mb-4">🌐 Follow Us</h2>
+        <div class="row">
+            {% for social in social_media %}
+            <div class="col-md-4 mb-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ social.platform }}</h5>
+                        <a href="https://{{ social.link }}" class="btn btn-primary btn-sm">Visit</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
